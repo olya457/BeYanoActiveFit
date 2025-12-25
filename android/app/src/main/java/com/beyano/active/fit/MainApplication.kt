@@ -1,4 +1,4 @@
-package com.beyanoactivefit
+package com.beyano.active.fit
 
 import android.app.Application
 import com.facebook.react.PackageList

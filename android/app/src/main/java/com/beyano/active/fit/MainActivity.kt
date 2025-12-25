@@ -1,4 +1,4 @@
-package com.beyanoactivefit
+package com.beyano.active.fit
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
