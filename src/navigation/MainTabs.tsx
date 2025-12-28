@@ -95,7 +95,7 @@ export default function MainTabs() {
 const styles = StyleSheet.create({
   tabBar: {
     position: 'absolute',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#ffffffff',
     borderWidth: 2,
     borderColor: ORANGE,
     shadowColor: '#000',

@@ -17,9 +17,10 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Onboarding'>;
 
 const { width: W, height: H } = Dimensions.get('window');
 const IS_SMALL = H < 750;
+const IS_TINY = H < 690;
+const IS_VERY_TINY = H < 640;
 
 const BG = require('../assets/loader_bg2.png');
-
 const LOGO3 = require('../assets/logo3.png');
 
 const ON1 = require('../assets/onboard1.png');
@@ -41,21 +42,21 @@ const PAGES: Page[] = [
   {
     key: '2',
     topText:
-      'BeYano Active Fit helps you train\nwithout distractions. Set your\npace, start the timer, and focus on\nmovement. No complicated plans,\njust a clean and simple way to stay\nactive.',
+      'Super Be Active Fit helps you train\nwithout distractions. Set your\npace, start the timer, and focus on\nmovement. No complicated plans,\njust a clean and simple way to stay\nactive.',
     button: 'Continue',
     image: ON2,
   },
   {
     key: '3',
     topText:
-      'BeYano Active Fit helps you train\nwithout distractions. Set your\npace, start the timer, and focus on\nmovement. No complicated plans,\njust a clean and simple way to stay\nactive.',
+      'Super Be Active Fit helps you train\nwithout distractions. Set your\npace, start the timer, and focus on\nmovement. No complicated plans,\njust a clean and simple way to stay\nactive.',
     button: 'Continue',
     image: ON3,
   },
   {
     key: '4',
     topText:
-      'BeYano Active Fit helps you train\nwithout distractions. Set your\npace, start the timer, and focus on\nmovement. No complicated plans,\njust a clean and simple way to stay\nactive.',
+      'Super Be Active Fit helps you train\nwithout distractions. Set your\npace, start the timer, and focus on\nmovement. No complicated plans,\njust a clean and simple way to stay\nactive.',
     button: 'Continue',
     image: ON4,
   },
@@ -67,6 +68,14 @@ const PAGES: Page[] = [
     image: ON5,
   },
 ];
+
+const PANEL_H = Math.round(H * (IS_SMALL ? 0.56 : 0.58));
+const BTN_H = 52;
+const BTN_MB = 20;
+const PANEL_PB = 20;
+const GAP_FROM_BUTTON = 20;
+const BTN_TOP_FROM_BOTTOM = PANEL_PB + BTN_MB + BTN_H;
+const IMAGE_BOTTOM = BTN_TOP_FROM_BOTTOM + GAP_FROM_BUTTON;
 
 export default function OnboardingScreen({ navigation }: Props) {
   const insets = useSafeAreaInsets();
@@ -86,7 +95,7 @@ export default function OnboardingScreen({ navigation }: Props) {
     }
   };
 
-  const topOffset = insets.top + 40;
+  const topOffset = insets.top + (index === 0 ? 60 : 52);
 
   return (
     <ImageBackground source={BG} style={styles.bg} resizeMode="cover">
@@ -109,7 +118,10 @@ export default function OnboardingScreen({ navigation }: Props) {
         renderItem={({ item }) => (
           <View style={[styles.page, { width: W }]}>
             <View style={styles.bottomPanel}>
-              <Image source={item.image} style={styles.man} resizeMode="contain" />
+              <View style={styles.imageWrap}>
+                <Image source={item.image} style={styles.onImage} resizeMode="contain" />
+              </View>
+
               <Pressable style={styles.primary} onPress={onPrimaryPress}>
                 <Text style={styles.primaryText}>{page.button}</Text>
               </Pressable>
@@ -121,30 +133,29 @@ export default function OnboardingScreen({ navigation }: Props) {
   );
 }
 
-const PANEL_H = Math.round(H * (IS_SMALL ? 0.56 : 0.58));
-
 const styles = StyleSheet.create({
   bg: { flex: 1 },
 
   topTextWrap: {
     position: 'absolute',
-    left: 26,
-    right: 26,
+    left: 24,
+    right: 24,
     zIndex: 10,
     alignItems: 'center',
   },
 
   logo3: {
-    width: Math.min(W * 0.62, 260),
-    height: 70,
+    width: Math.min(W * 0.78, 360),
+    height: IS_VERY_TINY ? 96 : IS_TINY ? 104 : 112,
   },
 
   topText: {
     color: '#FFFFFF',
-    fontSize: 13,
-    fontWeight: '700',
-    lineHeight: 18,
+    fontSize: IS_VERY_TINY ? 14 : IS_TINY ? 15 : 16,
+    fontWeight: '800',
+    lineHeight: IS_VERY_TINY ? 20 : IS_TINY ? 21 : 22,
     textAlign: 'center',
+    marginTop: 10,
   },
 
   page: {
@@ -154,32 +165,39 @@ const styles = StyleSheet.create({
 
   bottomPanel: {
     height: PANEL_H,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'transparent',
     borderTopLeftRadius: 34,
     borderTopRightRadius: 34,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    paddingBottom: 20,
+    paddingBottom: PANEL_PB,
   },
 
-  man: {
+  imageWrap: {
     position: 'absolute',
-    bottom: 72,
+    bottom: IMAGE_BOTTOM,
     width: Math.min(W * 0.78, 360),
-    height: PANEL_H * 0.86,
+    height: PANEL_H * (IS_VERY_TINY ? 0.74 : IS_TINY ? 0.78 : 0.8),
+    backgroundColor: 'transparent',
+  },
+
+  onImage: {
+    width: '100%',
+    height: '100%',
   },
 
   primary: {
     width: Math.min(W * 0.72, 320),
-    height: 52,
+    height: BTN_H,
     borderRadius: 12,
     backgroundColor: '#F08A2F',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.12)',
-    marginBottom: 20,
+    marginBottom: BTN_MB,
   },
+
   primaryText: {
     color: '#FFFFFF',
     fontWeight: '900',

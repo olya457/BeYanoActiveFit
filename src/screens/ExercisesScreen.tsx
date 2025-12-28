@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   card: {
     borderWidth: 2,
     borderColor: ORANGE,
-    backgroundColor: 'rgba(255,255,255,0.55)',
+    backgroundColor: 'rgba(50, 48, 48, 0.55)',
     alignItems: 'center',
     justifyContent: 'center',
   },

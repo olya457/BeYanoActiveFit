@@ -15,7 +15,6 @@ import { Picker } from '@react-native-picker/picker';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/types';
-
 import { addMinutesForDay, getDayKey } from '../store/statsStore';
 
 const { width: W, height: H } = Dimensions.get('window');
@@ -23,7 +22,7 @@ const IS_SMALL = H < 750;
 const IS_TINY = H < 690;
 
 const BG = require('../assets/timer_bg.png');
-const APP_ICON = require('../assets/app_icon.png');
+const APP_ICON = require('../assets/logo.png');
 
 const BTN_START_IMG = require('../assets/btn_clock.png');
 const BTN_ADV_IMG = require('../assets/btn_advanced.png');
@@ -49,10 +48,9 @@ export default function TimerScreen() {
   const [running, setRunning] = useState(false);
 
   const tickRef = useRef<NodeJS.Timeout | null>(null);
+  const savedOnceRef = useRef(false);
 
   const totalSelected = useMemo(() => hours * 3600 + minutes * 60 + seconds, [hours, minutes, seconds]);
-
-  const savedOnceRef = useRef(false);
 
   const stopTick = () => {
     if (tickRef.current) clearInterval(tickRef.current);
@@ -78,6 +76,7 @@ export default function TimerScreen() {
       };
     }, [])
   );
+
   const aIn = useRef(new Animated.Value(0)).current;
   const aUp = useRef(new Animated.Value(16)).current;
   const aIcon = useRef(new Animated.Value(0.92)).current;
@@ -103,6 +102,7 @@ export default function TimerScreen() {
 
     await addMinutesForDay(getDayKey(), mins);
   };
+
   useEffect(() => {
     if (!running) return;
 
@@ -112,9 +112,7 @@ export default function TimerScreen() {
         if (prev <= 1) {
           stopTick();
           setRunning(false);
-
           void saveToStats();
-
           return 0;
         }
         return prev - 1;
@@ -147,7 +145,8 @@ export default function TimerScreen() {
   const hh = Math.floor(secondsLeft / 3600);
   const mm = Math.floor((secondsLeft % 3600) / 60);
   const ss = secondsLeft % 60;
-  const ICON = IS_TINY ? 64 : IS_SMALL ? 70 : 78;
+
+  const ICON = IS_TINY ? 94 : IS_SMALL ? 140 : 148;
   const PICKER_H = IS_TINY ? 128 : 140;
   const PICKER_W = Platform.select({ ios: IS_TINY ? 88 : 92, android: 112 }) as number;
 
@@ -253,25 +252,33 @@ function PickerCol({
   onChange: (v: number) => void;
   items: number[];
 }) {
+  const isAndroid = Platform.OS === 'android';
+
   return (
     <View style={styles.pickerCol}>
-      <Picker
-        selectedValue={value}
-        onValueChange={(v: number) => onChange(v)}
-        style={{ width, height }}
-        itemStyle={styles.pickerItem}
-      >
-        {items.map(v => (
-          <Picker.Item key={`${label}_${v}`} label={String(v)} value={v} />
-        ))}
-      </Picker>
+      <View style={[styles.pickerBox, { width, height }]}>
+        <Picker
+          selectedValue={value}
+          onValueChange={(v: number) => onChange(v)}
+          style={[styles.picker, { width, height }]}
+          itemStyle={styles.pickerItem}
+          {...(isAndroid
+            ? ({ mode: 'dropdown', dropdownIconColor: '#111111', color: '#111111' } as any)
+            : ({ themeVariant: 'light' } as any))}
+        >
+          {items.map(v => (
+            <Picker.Item key={`${label}_${v}`} label={String(v)} value={v} color="#111111" />
+          ))}
+        </Picker>
+      </View>
+
       <Text style={styles.pickerLabel}>{label}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#000' },
+  root: { flex: 1, backgroundColor: '#000000' },
 
   wrap: {
     flex: 1,
@@ -286,14 +293,37 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 16,
   },
+
   pickerCol: { alignItems: 'center' },
-  pickerItem: { fontSize: 16, fontWeight: '700', color: '#000' },
-  pickerLabel: { marginTop: 6, fontSize: 14, fontWeight: '900', color: '#000' },
+
+  pickerBox: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    overflow: 'hidden',
+    justifyContent: 'center',
+  },
+
+  picker: {
+    backgroundColor: 'transparent',
+  },
+
+  pickerItem: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#111111',
+  },
+
+  pickerLabel: {
+    marginTop: 6,
+    fontSize: 14,
+    fontWeight: '900',
+    color: '#FFFFFF',
+  },
 
   time: {
     fontSize: 56,
     fontWeight: '900',
-    color: '#000',
+    color: '#FFFFFF',
     textAlign: 'center',
     ...(Platform.OS === 'android'
       ? {
@@ -309,7 +339,7 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     fontSize: 18,
     fontWeight: '800',
-    color: 'rgba(0,0,0,0.55)',
+    color: 'rgba(241, 238, 238, 0.96)',
     textAlign: 'center',
   },
 

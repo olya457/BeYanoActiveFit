@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
     borderTopColor: 'rgba(0,0,0,0.55)',
   },
 
-  line: { height: 1.5, backgroundColor: 'rgba(232,132,46,0.55)', marginVertical: 2 },
+  line: { height: 1.5, backgroundColor: 'rgba(232, 229, 46, 0.55)', marginVertical: 2 },
 
   shareBtn: {
     borderRadius: 18,
